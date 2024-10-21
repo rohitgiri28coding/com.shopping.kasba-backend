@@ -38,3 +38,4 @@ dependencies {
     implementation("org.mongodb:bson-kotlinx:5.2.0")
     implementation("commons-codec:commons-codec:1.17.1")
 }
+
