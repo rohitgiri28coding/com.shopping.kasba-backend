@@ -4,6 +4,7 @@ import com.example.data.User
 import com.example.data.UserDataSource
 import com.example.hashing.HashingService
 import com.example.request.AuthRequest
+import com.example.request.AuthRequest1
 import com.example.responses.AuthResponse
 import com.example.security.TokenClaim
 import com.example.security.TokenConfig
@@ -23,6 +24,8 @@ import io.ktor.server.routing.post
 fun Route.signUp(
 //    hashingService: HashingService,
     userDataSource: UserDataSource,
+    tokenService: TokenService,
+    tokenConfig: TokenConfig
 ) {
     post("signup") {
         val request = call.receiveNullable<AuthRequest>() ?: kotlin.run {
@@ -45,7 +48,11 @@ fun Route.signUp(
             call.respond(Conflict)
             return@post
         }
-        call.respond(OK)
+        val token = tokenService.generate(
+            config = tokenConfig,
+            TokenClaim(name = "userId", value = user.id.toString())
+        )
+        call.respond(OK, AuthResponse(token))
     }
 }
 fun Route.signIn(
@@ -55,7 +62,7 @@ fun Route.signIn(
     tokenConfig: TokenConfig
 ){
     post("signin") {
-        val request = call.receiveNullable<AuthRequest>() ?: kotlin.run {
+        val request = call.receiveNullable<AuthRequest1>() ?: kotlin.run {
             call.respond(
                 HttpStatusCode.BadRequest
             )

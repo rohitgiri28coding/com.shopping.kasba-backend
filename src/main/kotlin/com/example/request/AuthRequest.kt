@@ -7,3 +7,7 @@ data class AuthRequest(
     val phoneNumber: String,
     val name: String
 )
+@Serializable
+data class AuthRequest1(
+    val phoneNumber: String
+)

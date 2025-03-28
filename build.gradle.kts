@@ -6,6 +6,7 @@ plugins {
     kotlin("jvm") version "2.0.21"
     id("io.ktor.plugin") version "3.0.0"
     id("org.jetbrains.kotlin.plugin.serialization") version "2.0.21"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = "com.example"
@@ -20,6 +21,7 @@ application {
 
 repositories {
     mavenCentral()
+    maven { url = uri("https://maven.pkg.jetbrains.space/public/p/ktor/maven") } // Add this line
 }
 
 dependencies {
@@ -37,5 +39,17 @@ dependencies {
     implementation("org.mongodb:mongodb-driver-kotlin-coroutine:5.2.0")
     implementation("org.mongodb:bson-kotlinx:5.2.0")
     implementation("commons-codec:commons-codec:1.17.1")
+
+    implementation("com.amazonaws:aws-lambda-java-core:1.2.1")
+    implementation("com.amazonaws:aws-lambda-java-events:3.11.0")
+    implementation("com.amazonaws:aws-lambda-java-log4j:1.0.1")
+    implementation("com.google.code.gson:gson:2.9.1")
+
 }
 
+tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
+    archiveClassifier.set("all")
+    manifest {
+        attributes["Main-Class"] = "com.shopping.LambdaHandler"
+    }
+}

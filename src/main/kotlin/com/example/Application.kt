@@ -13,18 +13,21 @@ fun main(args: Array<String>) {
 }
 
 fun Application.module() {
-    val password = System.getenv("MONGO_PW")
+    val password = System.getenv("MONGO_PW") ?: "defaultPassword"
     val uri = "mongodb+srv://sandipkumar9334:$password@cluster0.b6kcl.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+
     val mongoClient = MongoClient.create(uri)
     val database = mongoClient.getDatabase("kasba")
     val userDataSource = MongoUserDataSource(database)
     val tokenService = JwtTokenService()
+
     val tokenConfig = TokenConfig(
-        issuer = environment.config.property("jwt.issuer").getString(),
-        audience = environment.config.property("jwt.audience").getString(),
+        issuer = environment.config.propertyOrNull("jwt.issuer")?.getString() ?: "defaultIssuer",
+        audience = environment.config.propertyOrNull("jwt.audience")?.getString() ?: "defaultAudience",
         expiresIn = 365L * 1000L * 60L * 60L * 24L,
-        secretKey = System.getenv("JWT_SECRET")
+        secretKey = System.getenv("JWT_SECRET") ?: "defaultSecretKey"
     )
+
     configureSerialization()
     configureMonitoring()
     configureSecurity(tokenConfig)

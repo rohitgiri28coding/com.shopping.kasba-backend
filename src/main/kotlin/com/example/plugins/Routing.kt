@@ -18,7 +18,7 @@ fun Application.configureRouting(
     tokenConfig: TokenConfig
 ) {
     routing {
-        signUp(userDataSource)
+        signUp(userDataSource, tokenService, tokenConfig)
         signIn(userDataSource, tokenService, tokenConfig)
         authenticate()
         getSecretInfo()

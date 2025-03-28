@@ -13,5 +13,4 @@ class MongoUserDataSource(db: MongoDatabase): UserDataSource {
     override suspend fun insertUser(user: User): Boolean {
         return users.insertOne(user).wasAcknowledged()
     }
-
 }
